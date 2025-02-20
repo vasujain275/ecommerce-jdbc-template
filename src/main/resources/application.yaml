@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: ecommerce-jdbc-template
+  sql:
+    init:
+        platform: postgresql
+        schema-locations: classpath:/schema.sql
+        mode:
+            always
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ecommerceDB
+    username: postgres
+    password: postgres123
+    driver-class-name: org.postgresql.Driver
+
+server:
+  port: 8080
+
+logging:
+  level:
+    org.springframework.jdbc.core: DEBUG
