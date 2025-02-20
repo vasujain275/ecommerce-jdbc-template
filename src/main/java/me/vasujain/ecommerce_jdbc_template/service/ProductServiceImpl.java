@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 public class ProductServiceImpl implements ProductService {
@@ -23,13 +25,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public Object getProducts(boolean paginate, int page, int size) {
-        logger.info("Fetching products with pagination={}", paginate);
-        if (paginate) {
-            return productRepository.findAllPaginated(page, size);
-        } else {
-            return productRepository.findAll();
-        }
+    public List<Product> getProducts() {
+        logger.info("Fetching all products");
+        return productRepository.findAll();
     }
 
     @Override
@@ -56,19 +54,18 @@ public class ProductServiceImpl implements ProductService {
     public Product updateProduct(Long id, ProductDTO dto) {
         logger.info("Updating product with id={}", id);
         Product product = getProduct(id);
-
         if (dto.getName() != null) product.setName(dto.getName());
         if (dto.getDescription() != null) product.setDescription(dto.getDescription());
         if (dto.getPrice() != null) product.setPrice(dto.getPrice());
         if (dto.getStockQuantity() != null) product.setStockQuantity(dto.getStockQuantity());
-
         return productRepository.update(product);
     }
 
     @Override
     public void deleteProduct(Long id) {
         logger.info("Deleting product with id={}", id);
-        getProduct(id); // Verify product exists
+        // Verify product exists before attempting deletion
+        getProduct(id);
         productRepository.deleteById(id);
     }
 }

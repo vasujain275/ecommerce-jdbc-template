@@ -1,18 +1,20 @@
 package me.vasujain.ecommerce_jdbc_template.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Product {
     private Long id;
     private String name;
     private String description;
     private BigDecimal price;
     private Integer stockQuantity;
-    private Boolean isActive;
-    private LocalDateTime createdAt;
 }

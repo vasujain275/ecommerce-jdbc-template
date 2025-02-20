@@ -2,7 +2,6 @@ package me.vasujain.ecommerce_jdbc_template.controller;
 
 import me.vasujain.ecommerce_jdbc_template.dto.ProductDTO;
 import me.vasujain.ecommerce_jdbc_template.model.ApiResponse;
-import me.vasujain.ecommerce_jdbc_template.model.PaginatedResult;
 import me.vasujain.ecommerce_jdbc_template.model.Product;
 import me.vasujain.ecommerce_jdbc_template.service.ProductService;
 import org.slf4j.Logger;
@@ -25,38 +24,14 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<?>> getAllProducts(
-            @RequestParam(defaultValue = "false") boolean paginate,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
-        logger.debug("Fetching products with pagination={} page={} size={}", paginate, page, size);
-        Object result = productService.getProducts(paginate, page, size);
-
-        if (result instanceof PaginatedResult) {
-            PaginatedResult<Product> paginatedResult = (PaginatedResult<Product>) result;
-            return ResponseEntity.ok(ApiResponse.builder()
-                    .status(HttpStatus.OK)
-                    .data(paginatedResult.getContent())
-                    .timestamp(LocalDate.now())
-                    .pagination(ApiResponse.PaginationMetadata.builder()
-                            .totalElements(paginatedResult.getTotalElements())
-                            .currentPage(paginatedResult.getCurrentPage())
-                            .pageSize(paginatedResult.getPageSize())
-                            .totalPages((int) Math.ceil(paginatedResult.getTotalElements() / (double) size))
-                            .build()
-                    )
-                    .build()
-            );
-        } else {
-            List<Product> products = (List<Product>) result;
-            return ResponseEntity.ok(ApiResponse.builder()
-                    .status(HttpStatus.OK)
-                    .data(products)
-                    .timestamp(LocalDate.now())
-                    .build()
-            );
-        }
+    public ResponseEntity<ApiResponse<?>> getAllProducts() {
+        logger.debug("Fetching all products");
+        List<Product> products = productService.getProducts();
+        return ResponseEntity.ok(ApiResponse.builder()
+                .status(HttpStatus.OK)
+                .data(products)
+                .timestamp(LocalDate.now())
+                .build());
     }
 
     @GetMapping("/{id}")
@@ -67,8 +42,7 @@ public class ProductController {
                 .status(HttpStatus.OK)
                 .data(product)
                 .timestamp(LocalDate.now())
-                .build()
-        );
+                .build());
     }
 
     @PostMapping
@@ -80,8 +54,7 @@ public class ProductController {
                 .data(newProduct)
                 .timestamp(LocalDate.now())
                 .message("Product created successfully")
-                .build()
-        );
+                .build());
     }
 
     @PutMapping("/{id}")
@@ -93,8 +66,7 @@ public class ProductController {
                 .data(updatedProduct)
                 .timestamp(LocalDate.now())
                 .message("Product updated successfully")
-                .build()
-        );
+                .build());
     }
 
     @DeleteMapping("/{id}")
@@ -105,7 +77,6 @@ public class ProductController {
                 .status(HttpStatus.OK)
                 .message("Product deleted successfully")
                 .timestamp(LocalDate.now())
-                .build()
-        );
+                .build());
     }
 }

@@ -15,7 +15,6 @@ public class ProductRowMapper implements RowMapper<Product> {
                 .description(rs.getString("description"))
                 .price(rs.getBigDecimal("price"))
                 .stockQuantity(rs.getInt("stock_quantity"))
-                .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
                 .build();
     }
 }
