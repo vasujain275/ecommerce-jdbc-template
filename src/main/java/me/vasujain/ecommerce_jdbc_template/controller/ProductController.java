@@ -1,6 +1,5 @@
 package me.vasujain.ecommerce_jdbc_template.controller;
 
-import me.vasujain.ecommerce_jdbc_template.dto.ProductDTO;
 import me.vasujain.ecommerce_jdbc_template.model.ApiResponse;
 import me.vasujain.ecommerce_jdbc_template.model.Product;
 import me.vasujain.ecommerce_jdbc_template.service.ProductService;
@@ -46,9 +45,9 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Product>> createProduct(@RequestBody ProductDTO dto) {
+    public ResponseEntity<ApiResponse<Product>> createProduct(@RequestBody Product product) {
         logger.debug("Creating a new product");
-        Product newProduct = productService.createProduct(dto);
+        Product newProduct = productService.createProduct(product);
         return ResponseEntity.ok(ApiResponse.<Product>builder()
                 .status(HttpStatus.CREATED)
                 .data(newProduct)
@@ -58,9 +57,9 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Product>> updateProduct(@PathVariable Long id, @RequestBody ProductDTO dto) {
+    public ResponseEntity<ApiResponse<Product>> updateProduct(@PathVariable Long id, @RequestBody Product product) {
         logger.debug("Updating product with id={}", id);
-        Product updatedProduct = productService.updateProduct(id, dto);
+        Product updatedProduct = productService.updateProduct(id, product);
         return ResponseEntity.ok(ApiResponse.<Product>builder()
                 .status(HttpStatus.OK)
                 .data(updatedProduct)

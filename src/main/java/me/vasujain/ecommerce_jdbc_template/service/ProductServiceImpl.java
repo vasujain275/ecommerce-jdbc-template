@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+
 @Service
 @Transactional
 public class ProductServiceImpl implements ProductService {
@@ -39,26 +40,23 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product createProduct(ProductDTO dto) {
+    public Product createProduct(Product product) {
         logger.info("Creating a new product");
-        Product product = Product.builder()
-                .name(dto.getName())
-                .description(dto.getDescription())
-                .price(dto.getPrice())
-                .stockQuantity(dto.getStockQuantity())
-                .build();
+        // Ensure id is null to allow auto-generation
+        product.setId(null);
         return productRepository.save(product);
     }
 
     @Override
-    public Product updateProduct(Long id, ProductDTO dto) {
+    public Product updateProduct(Long id, Product product) {
         logger.info("Updating product with id={}", id);
-        Product product = getProduct(id);
-        if (dto.getName() != null) product.setName(dto.getName());
-        if (dto.getDescription() != null) product.setDescription(dto.getDescription());
-        if (dto.getPrice() != null) product.setPrice(dto.getPrice());
-        if (dto.getStockQuantity() != null) product.setStockQuantity(dto.getStockQuantity());
-        return productRepository.update(product);
+        Product existingProduct = getProduct(id);
+        // Update only provided fields
+        if (product.getName() != null) existingProduct.setName(product.getName());
+        if (product.getDescription() != null) existingProduct.setDescription(product.getDescription());
+        if (product.getPrice() != null) existingProduct.setPrice(product.getPrice());
+        if (product.getStockQuantity() != null) existingProduct.setStockQuantity(product.getStockQuantity());
+        return productRepository.update(existingProduct);
     }
 
     @Override
